@@ -4,6 +4,7 @@ import { apiError } from "../utils/apiErrors.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { User } from "../models/user.models.js";
 
+
 // Register User
 const registerUser = asyncHandler(async (req, res) => {
   const { userName, email, password } = req.body;
