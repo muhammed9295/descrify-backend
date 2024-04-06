@@ -1,0 +1,47 @@
+import mongoose from "mongoose";
+import { asyncHandler } from "../utils/asyncHandlers.js";
+import { apiError } from "../utils/apiErrors.js";
+import { apiResponse } from "../utils/apiResponse.js";
+import { Conversation } from "../models/conversation.models.js";
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPEN_API_KEY
+});
+
+const generateTitleAndDescription = asyncHandler(async (req, res) => {
+  const { productName, category } = req.body;
+  const response = await  openai.chat.completions.create({
+    messages: [{ role: "user", content: `Craft a captivating search engine optimized title and detailed description that highlights the unique features and benefits of ${productName} and category ${category}, enticing potential customers to make a purchase on Amazon.` }],
+    model: "gpt-3.5-turbo",
+    max_tokens: 100
+  });
+
+  const finalResponse = response.choices[0].message.content;
+
+//   Save to conversation collection
+const conversation = new Conversation({
+    product: productName,
+    category: category,
+    response: finalResponse,
+    userId: req.user._id
+})
+
+await conversation.save();
+
+  return res
+        .status(200)
+        .json(new apiResponse(200, finalResponse, "Title generated successfully"));
+});
+
+// Get user conversation
+const getUserConversation = asyncHandler(async (req, res)=>{
+  const userConversation = await Conversation.find({userId: req.user._id}).select("-response")
+
+  return res
+   .status(200)
+   .json(new apiResponse(200, userConversation, "User conversation retrieved successfully"));
+})
+// Get user conversation
+
+export {generateTitleAndDescription, getUserConversation};

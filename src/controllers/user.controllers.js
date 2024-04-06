@@ -4,7 +4,6 @@ import { apiError } from "../utils/apiErrors.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { User } from "../models/user.models.js";
 
-
 // Register User
 const registerUser = asyncHandler(async (req, res) => {
   const { userName, email, password } = req.body;
@@ -103,7 +102,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
 // Logout User
 const logoutUser = asyncHandler(async (req, res) => {
-  await User.findByIdAndDelete(
+  await User.findByIdAndUpdate(
     req.user._id,
     {
       $unset: {
@@ -116,20 +115,52 @@ const logoutUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
-  }
+  };
 
   return res
-   .status(200)
-   .clearCookie("accessToken", options)
-   .clearCookie("refreshToken", options)
-   .json(
-      new apiResponse(
-        200,
-        {},
-        "User logged out successfully"
-      )
-    );
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new apiResponse(200, {}, "User logged out successfully"));
 });
 // Logout User
 
-export { registerUser, loginUser, logoutUser };
+// Get history of Single User
+const getHistory = asyncHandler(async (req, res) => {
+  const history = await User.aggregate([
+    {
+      $lookup: {
+        from: "conversations",
+        localField: "_id",
+        foreignField: "userId",
+        as: "history",
+      },
+    },
+    {
+      $addFields: {
+        history: {
+          $arrayElemAt: ["$history", 0],
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        history:{
+          conversationId:"$history._id",
+          product:"$history.product",
+          category:"$history.category",
+          userId:"$history.userId",
+          createdAt:"$history.createdAt"
+        }
+      }
+    }
+  ]);
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, history, "History retrieved successfully"));
+});
+// Get history of Single User
+
+export { registerUser, loginUser, logoutUser, getHistory };
