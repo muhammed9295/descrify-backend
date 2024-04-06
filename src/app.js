@@ -20,9 +20,11 @@ app.use(cookieParser());
 // Express configuration
 
 // Routes Import
+import userRouter from "./routes/user.routes.js";
 // Routes Import
 
 // Routes Declarations
+app.use("api/users", userRouter)
 // Routes Declarations
 
 export {app};
