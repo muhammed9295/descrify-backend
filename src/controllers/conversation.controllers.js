@@ -10,7 +10,7 @@ const openai = new OpenAI({
 });
 
 const generateTitleAndDescription = asyncHandler(async (req, res) => {
-  const { productName, category } = req.body;
+  const { productName, category } = req.query;
   const response = await  openai.chat.completions.create({
     messages: [{ role: "user", content: `Craft a captivating search engine optimized title and detailed description that highlights the unique features and benefits of ${productName} and category ${category}, enticing potential customers to make a purchase on Amazon.` }],
     model: "gpt-3.5-turbo",
@@ -44,4 +44,14 @@ const getUserConversation = asyncHandler(async (req, res)=>{
 })
 // Get user conversation
 
-export {generateTitleAndDescription, getUserConversation};
+// Get single user response
+const getSingleUserResponse = asyncHandler(async(req, res)=> {
+  const userResponse = await Conversation.findById(req.params?.id)
+
+  return res
+   .status(200)
+   .json(new apiResponse(200, userResponse, "Single user response retrieved successfully"));
+})
+// Get single user response
+
+export {generateTitleAndDescription, getUserConversation, getSingleUserResponse};
