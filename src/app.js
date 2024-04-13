@@ -6,7 +6,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://descrify-frontend.vercel.app",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   })
