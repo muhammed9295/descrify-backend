@@ -54,4 +54,30 @@ const getSingleUserResponse = asyncHandler(async(req, res)=> {
 })
 // Get single user response
 
-export {generateTitleAndDescription, getUserConversation, getSingleUserResponse};
+// Delete single user response
+const deleteResponse = asyncHandler(async(req, res)=>{
+  try {
+    const {id} = req.params
+    // validate the id
+    if(!id?.trim()){
+      throw new apiError(400, "Invalid id passed")
+    }
+
+    const deletedResponse = await Conversation.findByIdAndDelete(id);
+
+    if(!deletedResponse){
+      throw new apiError(404, "Response not found")
+    }
+
+    return res
+     .status(200)
+     .json(new apiResponse(200, deletedResponse, "User response deleted successfully"));
+
+  } catch (error) {
+    console.error("Error deleting conversation", error);
+    res.status(500).send({message: "Error deleting conversation"})
+  }
+})
+// Delete single user response
+
+export {generateTitleAndDescription, getUserConversation, getSingleUserResponse, deleteResponse};
