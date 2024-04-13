@@ -6,7 +6,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://descrify-frontend.vercel.app",
+    origin: "https://descrify.netlify.app/",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   })
