@@ -6,7 +6,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://descrify.netlify.app",
+    origin: ["https://descrify.netlify.app", "https://descrify-app-mrbg6.ondigitalocean.app"],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
