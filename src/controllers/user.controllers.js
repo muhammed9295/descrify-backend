@@ -87,7 +87,7 @@ const loginUser = asyncHandler(async (req, res) => {
     maxAge: 900000,
     sameSite: 'none',
     partitioned: true,
-    domain: '.descrify-app-mrbg6.ondigitalocean.app',
+    domain: 'descrify.netlify.app',
     path: '/'
   };
 
