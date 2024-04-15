@@ -87,7 +87,7 @@ const loginUser = asyncHandler(async (req, res) => {
     maxAge: 900000,
     sameSite: 'none',
     partitioned: true,
-    domain: '.descrify.netlify.app',
+    domain: '.descrify.online',
     path: '/'
   };
 
@@ -120,7 +120,11 @@ const logoutUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
-    sameSite: 'lax',
+    maxAge: 900000,
+    sameSite: 'none',
+    partitioned: true,
+    domain: '.descrify.online',
+    path: '/'
   };
 
   return res
